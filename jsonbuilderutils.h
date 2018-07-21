@@ -14,3 +14,14 @@
 
 #define JSONBUILDER_START_ARRAY(b, n) {json_builder_set_member_name(b, n);\
                                       json_builder_begin_array(b);}
+
+static gchar* jsonbuilder_freetostring(JsonBuilder* jsonbuilder, gsize* jsonlen) {
+	JsonNode* rootnode = json_builder_get_root(jsonbuilder);
+	JsonGenerator* generator = json_generator_new();
+	json_generator_set_root(generator, rootnode);
+
+	gchar* json = json_generator_to_data(generator, jsonlen);
+	g_object_unref(generator);
+	g_object_unref(jsonbuilder);
+	return json;
+}
