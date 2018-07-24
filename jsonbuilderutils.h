@@ -15,13 +15,24 @@
 #define JSONBUILDER_START_ARRAY(b, n) {json_builder_set_member_name(b, n);\
                                       json_builder_begin_array(b);}
 
-static gchar* jsonbuilder_freetostring(JsonBuilder* jsonbuilder, gsize* jsonlen) {
+static gchar* jsonbuilder_freetostring(JsonBuilder* jsonbuilder, gsize* jsonlen,
+		gboolean pretty) {
 	JsonNode* rootnode = json_builder_get_root(jsonbuilder);
 	JsonGenerator* generator = json_generator_new();
 	json_generator_set_root(generator, rootnode);
+	json_generator_set_pretty(generator, pretty);
 
 	gchar* json = json_generator_to_data(generator, jsonlen);
 	g_object_unref(generator);
 	g_object_unref(jsonbuilder);
 	return json;
+}
+
+static gboolean jsonbuilder_writetofile(JsonBuilder*, gboolean, const gchar*) __attribute__((unused));
+static gboolean jsonbuilder_writetofile(JsonBuilder* jsonbuilder,
+		gboolean pretty, const gchar* path) {
+	gsize jsonlen;
+	gchar* json = jsonbuilder_freetostring(jsonbuilder, &jsonlen, TRUE);
+	g_file_set_contents(path, json, jsonlen, NULL);
+	return TRUE;
 }
