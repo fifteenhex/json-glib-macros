@@ -1,7 +1,7 @@
 #pragma once
 
 #define JSONBUILDER_ADD_INT(b, n, v) {json_builder_set_member_name(b, n);\
-                                     json_builder_add_int_value(b, (int) v);}
+                                     json_builder_add_int_value(b, (gint64) v);}
 
 #define JSONBUILDER_ADD_DOUBLE(b, n, v) {json_builder_set_member_name(b, n);\
                                      json_builder_add_double_value(b, (double) v);}
